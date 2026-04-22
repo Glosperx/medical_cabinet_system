@@ -9,19 +9,19 @@ public class Programare implements Comparable<Programare> {
 
     private Pacient pacient;
     private Medic medic;
-    private LocalDateTime dateTime;
+    private LocalDateTime dataOra;
     private Status status;
 
-    public Programare(Pacient pacient, Medic medic, LocalDateTime dateTime) {
+    public Programare(Pacient pacient, Medic medic, LocalDateTime dataOra) {
         this.pacient = pacient;
         this.medic = medic;
-        this.dateTime = dateTime;
+        this.dataOra = dataOra;
         this.status = Status.PROGRAMATA;
     }
 
     public Pacient getPacient()        { return pacient; }
     public Medic getMedic()            { return medic; }
-    public LocalDateTime getDateTime() { return dateTime; }
+    public LocalDateTime getDataOra() { return dataOra; }
     public Status getStatus()          { return status; }
 
     public void anuleaza()    { this.status = Status.ANULATA; }
@@ -29,15 +29,15 @@ public class Programare implements Comparable<Programare> {
 
     @Override
     public int compareTo(Programare other) {
-        return this.dateTime.compareTo(other.dateTime);
+        return this.dataOra.compareTo(other.dataOra);
     }
 
     @Override
     public String toString() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return "Programare{pacient=" + pacient.getName()
-                + ", medic=" + medic.getName()
-                + ", data=" + dateTime.format(fmt)
+        return "Programare{pacient=" + pacient.getNume()
+                + ", medic=" + medic.getNume()
+                + ", data=" + dataOra.format(fmt)
                 + ", status=" + status + "}";
     }
 }

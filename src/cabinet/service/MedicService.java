@@ -10,17 +10,17 @@ public class MedicService {
 
     private TreeSet<Medic> medici = new TreeSet<>();
 
-    public void addDoctor(Medic medic) {
+    public void adaugaMedic(Medic medic) {
         medici.add(medic);
     }
 
-    public List<Medic> findBySpecialization(String specialization) {
+    public List<Medic> gasesteDupaSpecializare(String specializare) {
         return medici.stream()
-                .filter(m -> m.getSpecialization().equalsIgnoreCase(specialization))
+                .filter(m -> m.getSpecializare().equalsIgnoreCase(specializare))
                 .collect(Collectors.toList());
     }
 
-    public TreeSet<Medic> getAllDoctors() {
+    public TreeSet<Medic> getTotiMedicii() {
         return medici;
     }
 }

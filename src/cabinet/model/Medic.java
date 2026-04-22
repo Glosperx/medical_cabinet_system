@@ -2,22 +2,22 @@ package cabinet.model;
 
 public abstract class Medic extends Persoana {
 
-    private String licenseNumber;
-    protected String specialization;
+    private String numarLicenta;
+    protected String specializare;
 
-    public Medic(String name, String cnp, String phone, String licenseNumber, String specialization) {
-        super(name, cnp, phone);
-        this.licenseNumber = licenseNumber;
-        this.specialization = specialization;
+    public Medic(String nume, String cnp, String telefon, String numarLicenta, String specializare) {
+        super(nume, cnp, telefon);
+        this.numarLicenta = numarLicenta;
+        this.specializare = specializare;
     }
 
-    public String getLicenseNumber()  { return licenseNumber; }
-    public String getSpecialization() { return specialization; }
+    public String getNumarLicenta()  { return numarLicenta; }
+    public String getSpecializare() { return specializare; }
 
-    public abstract String getRole();
+    public abstract String getRol();
 
     @Override
     public String toString() {
-        return getRole() + "{" + super.toString() + ", specializare=" + specialization + "}";
+        return getRol() + "{" + super.toString() + ", specializare=" + specializare + "}";
     }
 }

@@ -12,20 +12,20 @@ import java.util.stream.Collectors;
 
 public class ProgramareService {
 
-    private TreeMap<String, List<Programare>> programariPePatient = new TreeMap<>();
+    private TreeMap<String, List<Programare>> programariPePacient = new TreeMap<>();
 
-    public Programare schedule(Pacient pacient, Medic medic, LocalDateTime dateTime) {
-        Programare programare = new Programare(pacient, medic, dateTime);
-        programariPePatient
+    public Programare programeaza(Pacient pacient, Medic medic, LocalDateTime dataOra) {
+        Programare programare = new Programare(pacient, medic, dataOra);
+        programariPePacient
                 .computeIfAbsent(pacient.getCnp(), k -> new ArrayList<>())
                 .add(programare);
         return programare;
     }
 
-    public boolean cancel(Pacient pacient, LocalDateTime dateTime) {
-        List<Programare> lista = programariPePatient.getOrDefault(pacient.getCnp(), List.of());
+    public boolean anuleaza(Pacient pacient, LocalDateTime dataOra) {
+        List<Programare> lista = programariPePacient.getOrDefault(pacient.getCnp(), List.of());
         for (Programare p : lista) {
-            if (p.getDateTime().equals(dateTime) && p.getStatus() == Programare.Status.PROGRAMATA) {
+            if (p.getDataOra().equals(dataOra) && p.getStatus() == Programare.Status.PROGRAMATA) {
                 p.anuleaza();
                 return true;
             }
@@ -33,23 +33,23 @@ public class ProgramareService {
         return false;
     }
 
-    public List<Programare> getAppointmentsForPatient(String cnp) {
-        return programariPePatient.getOrDefault(cnp, List.of());
+    public List<Programare> getProgramariPentruPacient(String cnp) {
+        return programariPePacient.getOrDefault(cnp, List.of());
     }
 
-    public List<Programare> getAppointmentsForDoctor(Medic medic) {
-        return programariPePatient.values().stream()
+    public List<Programare> getProgramariPentruMedic(Medic medic) {
+        return programariPePacient.values().stream()
                 .flatMap(List::stream)
                 .filter(p -> p.getMedic().getCnp().equals(medic.getCnp()))
                 .collect(Collectors.toList());
     }
 
-    public List<Programare> getUpcomingAppointments() {
+    public List<Programare> getProgramariViitoare() {
         LocalDateTime now = LocalDateTime.now();
-        return programariPePatient.values().stream()
+        return programariPePacient.values().stream()
                 .flatMap(List::stream)
                 .filter(p -> p.getStatus() == Programare.Status.PROGRAMATA
-                        && p.getDateTime().isAfter(now))
+                        && p.getDataOra().isAfter(now))
                 .sorted()
                 .collect(Collectors.toList());
     }

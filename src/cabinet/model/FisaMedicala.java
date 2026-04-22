@@ -4,24 +4,24 @@ import java.time.LocalDate;
 
 public class FisaMedicala {
 
-    private String diagnosis;
-    private String treatment;
-    private LocalDate date;
+    private String diagnostic;
+    private String tratament;
+    private LocalDate data;
 
-    public FisaMedicala(String diagnosis, String treatment, LocalDate date) {
-        this.diagnosis = diagnosis;
-        this.treatment = treatment;
-        this.date = date;
+    public FisaMedicala(String diagnostic, String tratament, LocalDate data) {
+        this.diagnostic = diagnostic;
+        this.tratament = tratament;
+        this.data = data;
     }
 
-    public String getDiagnosis() { return diagnosis; }
-    public String getTreatment() { return treatment; }
-    public LocalDate getDate()   { return date; }
+    public String getDiagnostic() { return diagnostic; }
+    public String getTratament() { return tratament; }
+    public LocalDate getData()   { return data; }
 
     @Override
     public String toString() {
-        return "FisaMedicala{data=" + date
-                + ", diagnostic=" + diagnosis
-                + ", tratament=" + treatment + "}";
+        return "FisaMedicala{data=" + data
+                + ", diagnostic=" + diagnostic
+                + ", tratament=" + tratament + "}";
     }
 }

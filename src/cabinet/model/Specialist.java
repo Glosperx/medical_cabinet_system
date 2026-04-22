@@ -2,16 +2,16 @@ package cabinet.model;
 
 public class Specialist extends Medic {
 
-    private String domain;
+    private String domeniu;
 
-    public Specialist(String name, String cnp, String phone,
-                      String licenseNumber, String domain) {
-        super(name, cnp, phone, licenseNumber, domain);
-        this.domain = domain;
+    public Specialist(String nume, String cnp, String telefon,
+                      String numarLicenta, String domeniu) {
+        super(nume, cnp, telefon, numarLicenta, domeniu);
+        this.domeniu = domeniu;
     }
 
-    public String getDomain() { return domain; }
+    public String getDomeniu() { return domeniu; }
 
     @Override
-    public String getRole() { return "Specialist"; }
+    public String getRol() { return "Specialist"; }
 }

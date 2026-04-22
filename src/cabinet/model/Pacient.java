@@ -5,24 +5,24 @@ import java.util.List;
 
 public class Pacient extends Persoana {
 
-    private String bloodType;
-    private List<FisaMedicala> medicalHistory;
+    private String grupaSangvina;
+    private List<FisaMedicala> istoricMedical;
 
-    public Pacient(String name, String cnp, String phone, String bloodType) {
-        super(name, cnp, phone);
-        this.bloodType = bloodType;
-        this.medicalHistory = new ArrayList<>();
+    public Pacient(String nume, String cnp, String telefon, String grupaSangvina) {
+        super(nume, cnp, telefon);
+        this.grupaSangvina = grupaSangvina;
+        this.istoricMedical = new ArrayList<>();
     }
 
-    public String getBloodType() { return bloodType; }
-    public List<FisaMedicala> getMedicalHistory() { return medicalHistory; }
+    public String getGrupaSangvina() { return grupaSangvina; }
+    public List<FisaMedicala> getIstoricMedical() { return istoricMedical; }
 
-    public void addRecord(FisaMedicala fisa) {
-        medicalHistory.add(fisa);
+    public void adaugaFisa(FisaMedicala fisa) {
+        istoricMedical.add(fisa);
     }
 
     @Override
     public String toString() {
-        return "Pacient{" + super.toString() + ", grupaSangvina=" + bloodType + "}";
+        return "Pacient{" + super.toString() + ", grupaSangvina=" + grupaSangvina + "}";
     }
 }

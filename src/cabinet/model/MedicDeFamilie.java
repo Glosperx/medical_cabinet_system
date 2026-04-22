@@ -4,14 +4,14 @@ public class MedicDeFamilie extends Medic {
 
     private boolean poateEliberaBiletTriimitere;
 
-    public MedicDeFamilie(String name, String cnp, String phone,
-                          String licenseNumber, boolean poateEliberaBiletTriimitere) {
-        super(name, cnp, phone, licenseNumber, "Medicina de Familie");
+    public MedicDeFamilie(String nume, String cnp, String telefon,
+                          String numarLicenta, boolean poateEliberaBiletTriimitere) {
+        super(nume, cnp, telefon, numarLicenta, "Medicina de Familie");
         this.poateEliberaBiletTriimitere = poateEliberaBiletTriimitere;
     }
 
     public boolean poateEliberaBiletTriimitere() { return poateEliberaBiletTriimitere; }
 
     @Override
-    public String getRole() { return "MedicDeFamilie"; }
+    public String getRol() { return "MedicDeFamilie"; }
 }

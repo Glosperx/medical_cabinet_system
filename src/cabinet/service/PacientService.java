@@ -10,31 +10,31 @@ public class PacientService {
 
     private TreeSet<Pacient> pacienti = new TreeSet<>();
 
-    public void addPatient(Pacient pacient) {
+    public void adaugaPacient(Pacient pacient) {
         pacienti.add(pacient);
     }
 
-    public Pacient findByCnp(String cnp) {
+    public Pacient gasesteDupaCnp(String cnp) {
         return pacienti.stream()
                 .filter(p -> p.getCnp().equals(cnp))
                 .findFirst()
                 .orElse(null);
     }
 
-    public void addMedicalRecord(String cnp, FisaMedicala fisa) {
-        Pacient pacient = findByCnp(cnp);
+    public void adaugaFisaMedicala(String cnp, FisaMedicala fisa) {
+        Pacient pacient = gasesteDupaCnp(cnp);
         if (pacient != null) {
-            pacient.addRecord(fisa);
+            pacient.adaugaFisa(fisa);
         }
     }
 
-    public List<FisaMedicala> getMedicalHistory(String cnp) {
-        Pacient pacient = findByCnp(cnp);
+    public List<FisaMedicala> getIstoricMedical(String cnp) {
+        Pacient pacient = gasesteDupaCnp(cnp);
         if (pacient == null) return List.of();
-        return pacient.getMedicalHistory();
+        return pacient.getIstoricMedical();
     }
 
-    public TreeSet<Pacient> getAllPatients() {
+    public TreeSet<Pacient> getTotiPacientii() {
         return pacienti;
     }
 }

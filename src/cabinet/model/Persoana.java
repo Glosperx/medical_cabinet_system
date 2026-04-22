@@ -2,25 +2,25 @@ package cabinet.model;
 
 public abstract class Persoana implements Comparable<Persoana> {
 
-    private String name;
+    private String nume;
     private String cnp;
-    private String phone;
+    private String telefon;
 
-    public Persoana(String name, String cnp, String phone) {
-        this.name = name;
+    public Persoana(String nume, String cnp, String telefon) {
+        this.nume = nume;
         this.cnp = cnp;
-        this.phone = phone;
+        this.telefon = telefon;
     }
 
-    public String getName()  { return name; }
+    public String getNume()  { return nume; }
     public String getCnp()   { return cnp; }
-    public String getPhone() { return phone; }
+    public String getTelefon() { return telefon; }
 
-    public void setPhone(String phone) { this.phone = phone; }
+    public void setTelefon(String telefon) { this.telefon = telefon; }
 
     @Override
     public int compareTo(Persoana other) {
-        return this.name.compareTo(other.name);
+        return this.nume.compareTo(other.nume);
     }
 
     @Override
@@ -35,6 +35,6 @@ public abstract class Persoana implements Comparable<Persoana> {
 
     @Override
     public String toString() {
-        return name + " (CNP: " + cnp + ", Telefon: " + phone + ")";
+        return nume + " (CNP: " + cnp + ", Telefon: " + telefon + ")";
     }
 }
