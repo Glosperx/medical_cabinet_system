@@ -9,7 +9,6 @@ import java.util.Properties;
 
 public class DatabaseConnection {
 
-    private static DatabaseConnection instance;
     private Connection connection;
     private final Properties props = new Properties();
 
@@ -22,11 +21,12 @@ public class DatabaseConnection {
         }
     }
 
-    public static synchronized DatabaseConnection getInstance() {
-        if (instance == null) {
-            instance = new DatabaseConnection();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final DatabaseConnection INSTANCE = new DatabaseConnection();
+    }
+
+    public static DatabaseConnection getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     public Connection getConnection() throws SQLException {

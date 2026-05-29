@@ -12,15 +12,14 @@ import java.util.Optional;
 
 public class MedicRepository implements Repository<Medic, String> {
 
-    private static MedicRepository instance;
-
     private MedicRepository() {}
 
-    public static synchronized MedicRepository getInstance() {
-        if (instance == null) {
-            instance = new MedicRepository();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final MedicRepository INSTANCE = new MedicRepository();
+    }
+
+    public static MedicRepository getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     private Connection conn() throws SQLException {

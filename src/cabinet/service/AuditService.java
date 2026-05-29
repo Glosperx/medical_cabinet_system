@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 public class AuditService {
 
-    private static AuditService instance;
     private static final String AUDIT_FILE = "audit.csv";
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -16,11 +15,12 @@ public class AuditService {
 
     private AuditService() {}
 
-    public static synchronized AuditService getInstance() {
-        if (instance == null) {
-            instance = new AuditService();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final AuditService INSTANCE = new AuditService();
+    }
+
+    public static AuditService getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     public void log(String actiune) {

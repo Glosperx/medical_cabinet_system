@@ -10,15 +10,14 @@ import java.util.Optional;
 
 public class FisaMedicalaRepository implements Repository<FisaMedicala, Long> {
 
-    private static FisaMedicalaRepository instance;
-
     private FisaMedicalaRepository() {}
 
-    public static synchronized FisaMedicalaRepository getInstance() {
-        if (instance == null) {
-            instance = new FisaMedicalaRepository();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final FisaMedicalaRepository INSTANCE = new FisaMedicalaRepository();
+    }
+
+    public static FisaMedicalaRepository getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     private Connection conn() throws SQLException {

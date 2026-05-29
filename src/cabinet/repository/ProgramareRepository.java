@@ -11,15 +11,14 @@ import java.util.Optional;
 
 public class ProgramareRepository implements Repository<Programare, Long> {
 
-    private static ProgramareRepository instance;
-
     private ProgramareRepository() {}
 
-    public static synchronized ProgramareRepository getInstance() {
-        if (instance == null) {
-            instance = new ProgramareRepository();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final ProgramareRepository INSTANCE = new ProgramareRepository();
+    }
+
+    public static ProgramareRepository getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     private Connection conn() throws SQLException {

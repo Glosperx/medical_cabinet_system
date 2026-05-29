@@ -10,15 +10,14 @@ import java.util.Optional;
 
 public class PacientRepository implements Repository<Pacient, String> {
 
-    private static PacientRepository instance;
-
     private PacientRepository() {}
 
-    public static synchronized PacientRepository getInstance() {
-        if (instance == null) {
-            instance = new PacientRepository();
-        }
-        return instance;
+    private static class SingletonHolder {
+        private static final PacientRepository INSTANCE = new PacientRepository();
+    }
+
+    public static PacientRepository getInstance() {
+        return SingletonHolder.INSTANCE;
     }
 
     private Connection conn() throws SQLException {
