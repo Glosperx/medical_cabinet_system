@@ -7,6 +7,7 @@ public class Programare implements Comparable<Programare> {
 
     public enum Status { PROGRAMATA, ANULATA, FINALIZATA }
 
+    private long id = -1;
     private Pacient pacient;
     private Medic medic;
     private LocalDateTime dataOra;
@@ -19,13 +20,15 @@ public class Programare implements Comparable<Programare> {
         this.status = Status.PROGRAMATA;
     }
 
+    public long getId()                { return id; }
     public Pacient getPacient()        { return pacient; }
     public Medic getMedic()            { return medic; }
     public LocalDateTime getDataOra() { return dataOra; }
     public Status getStatus()          { return status; }
 
-    public void anuleaza()    { this.status = Status.ANULATA; }
-    public void finalizeaza() { this.status = Status.FINALIZATA; }
+    public void setId(long id)         { this.id = id; }
+    public void anuleaza()             { this.status = Status.ANULATA; }
+    public void finalizeaza()          { this.status = Status.FINALIZATA; }
 
     @Override
     public int compareTo(Programare other) {

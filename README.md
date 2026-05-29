@@ -1,45 +1,152 @@
-# Sistem de Gestiune Cabinet Medical - Etapa I
+# Sistem de Gestiune Cabinet Medical – Etapa I + II
 
-Sistemul este conceput pentru a gestiona activitatea dintr-un cabinet medical, incluzand managementul pacientilor, medicilor si programarilor.
+Sistemul gestioneaza activitatea unui cabinet medical: pacienti, medici, programari si fise medicale, cu persistenta in PostgreSQL si audit automat.
+
+---
 
 ## 1. Definirea sistemului
 
 ### Obiecte identificate (8 tipuri):
-1. **Persoana** (Clasa abstracta de baza)
-2. **Pacient** (Extinde Persoana)
-3. **Medic** (Clasa abstracta, extinde Persoana)
-4. **MedicDeFamilie** (Extinde Medic)
-5. **Specialist** (Extinde Medic)
-6. **Programare** (Gestiunea legaturii dintre pacient, medic si timp)
-7. **FisaMedicala** (Istoricul medical al unui pacient)
-8. **Cabinet** (Entitate care grupeaza medicii si locatia)
+1. **Persoana** – clasa abstracta de baza
+2. **Pacient** – extinde Persoana
+3. **Medic** – clasa abstracta, extinde Persoana
+4. **MedicDeFamilie** – extinde Medic
+5. **Specialist** – extinde Medic
+6. **Programare** – leaga pacient, medic si timp
+7. **FisaMedicala** – istoricul medical al unui pacient
+8. **Cabinet** – grupeaza medicii si locatia
 
-### Actiuni / Interogari (10+):
-1. Adaugarea unui medic in sistem.
-2. Afisarea listei complete de medici (sortata alfabetic).
-3. Cautarea medicilor dupa specializare (ex: Cardiologie).
-4. Inregistrarea unui pacient nou.
-5. Afisarea listei de pacienti (sortata dupa nume).
-6. Adaugarea unei fise medicale noi pentru un pacient existent.
-7. Vizualizarea istoricului medical complet al unui pacient.
-8. Programarea unei consultatii noi.
-9. Anularea unei programari existente.
-10. Vizualizarea tuturor programarilor viitoare (ordonate cronologic).
-11. Filtrarea programarilor pentru un anumit pacient.
-12. Vizualizarea programarilor pentru un anumit medic.
+### Actiuni / Interogari (12):
+1. Adaugarea unui medic in sistem
+2. Afisarea listei complete de medici (sortata alfabetic)
+3. Cautarea medicilor dupa specializare
+4. Inregistrarea unui pacient nou
+5. Afisarea listei de pacienti (sortata dupa nume)
+6. Adaugarea unei fise medicale noi pentru un pacient
+7. Vizualizarea istoricului medical al unui pacient
+8. Programarea unei consultatii noi
+9. Anularea unei programari existente
+10. Vizualizarea tuturor programarilor viitoare (cronologic)
+11. Filtrarea programarilor pentru un pacient
+12. Vizualizarea programarilor pentru un medic
 
-## 2. Detalii Implementare
+---
 
-Aplicatia respecta toate cerintele tehnice pentru Etapa I:
-- **Clase simple**: Toate modelele au atribute `private` si metode de acces (getters/setters).
-- **Colectii**:
-    - `List` (ArrayList) pentru gestionarea istoricului medical si a listelor de medici.
-    - `TreeMap` pentru stocarea programarilor (ordonate automat dupa cheie) si a pacientilor.
-    - `TreeSet` / `Collections.sort` folosit pentru afisarea datelor sortate.
-- **Mostenire**: Ierarhia `Persoana` -> `Pacient`/`Medic` si `Medic` -> `MedicDeFamilie`/`Specialist`.
-- **Servicii**: Operatiile sunt expuse prin clasele `MedicService`, `PacientService` si `ProgramareService`.
-- **Main**: Clasa `cabinet.Main` demonstreaza functionalitatea completa a sistemului prin apeluri catre servicii.
+## 2. Detalii Implementare – Etapa I
 
-## Instructiuni de rulare
-1. Compilare: `javac -d out -sourcepath src src/cabinet/Main.java`
-2. Executie: `java -cp out cabinet.Main`
+- **Clase simple**: atribute `private`, getteri/setteri.
+- **Colectii**: `List` (ArrayList), `TreeMap`, `TreeSet`.
+- **Mostenire**: `Persoana → Pacient/Medic → MedicDeFamilie/Specialist`.
+- **Servicii**: `MedicService`, `PacientService`, `ProgramareService`.
+- **Main**: demonstratie completa a functionalitatii.
+
+---
+
+## 3. Detalii Implementare – Etapa II
+
+### 3.1 Persistenta JDBC + PostgreSQL
+
+| Clasa                  | Descriere                                                  |
+|------------------------|------------------------------------------------------------|
+| `DatabaseConnection`   | Singleton; citeste `db.properties`; gestioneaza conexiunea |
+| `Repository<T,ID>`     | Interfata generica: `save`, `findById`, `findAll`, `update`, `delete` |
+| `PacientRepository`    | CRUD pentru tabela `pacienti` (ID = CNP)                   |
+| `MedicRepository`      | CRUD pentru tabela `medici`; coloana discriminatoare `tip_medic` (`MEDIC_FAMILIE` / `SPECIALIST`) |
+| `FisaMedicalaRepository` | CRUD pentru `fise_medicale`; metoda extra `findByPacientCnp` |
+| `ProgramareRepository` | CRUD pentru `programari` cu JOIN pe pacienti/medici; metode extra `findViitoare`, `findByPacientCnp`, `findByMedicCnp`, `anulareByPacientAndData` |
+
+**Schema BD** (`schema.sql`):
+```
+pacienti        – id, cnp (UNIQUE), nume, telefon, grupa_sangvina
+medici          – id, cnp (UNIQUE), nume, telefon, numar_licenta, specializare, tip_medic, poate_elibera_bilet, domeniu
+programari      – id, pacient_cnp (FK), medic_cnp (FK), data_ora, status
+fise_medicale   – id, pacient_cnp (FK), diagnostic, tratament, data
+```
+Toate FK-urile au `ON DELETE CASCADE`.
+
+### 3.2 Serviciul de Audit
+
+`AuditService` (singleton) scrie in `audit.csv` (radacina proiectului) cate o linie per actiune:
+```
+<nume_actiune>,<timestamp>
+```
+Cele 12 actiuni auditate corespund metodelor din servicii.
+
+---
+
+## 4. Structura proiectului
+
+```
+programare_cabinet_medical/
+├── lib/
+│   └── postgresql-42.7.3.jar
+├── src/
+│   ├── resources/
+│   │   └── db.properties
+│   └── cabinet/
+│       ├── Main.java
+│       ├── db/
+│       │   └── DatabaseConnection.java
+│       ├── model/
+│       │   ├── Persoana.java
+│       │   ├── Pacient.java
+│       │   ├── Medic.java
+│       │   ├── MedicDeFamilie.java
+│       │   ├── Specialist.java
+│       │   ├── Programare.java
+│       │   ├── FisaMedicala.java
+│       │   └── Cabinet.java
+│       ├── repository/
+│       │   ├── Repository.java
+│       │   ├── PacientRepository.java
+│       │   ├── MedicRepository.java
+│       │   ├── ProgramareRepository.java
+│       │   └── FisaMedicalaRepository.java
+│       └── service/
+│           ├── AuditService.java
+│           ├── MedicService.java
+│           ├── PacientService.java
+│           └── ProgramareService.java
+├── out/                    (fisiere .class compilate)
+├── schema.sql
+├── audit.csv               (generat la rulare)
+└── README.md
+```
+
+---
+
+## 5. Configurare PostgreSQL
+
+Datele de conexiune se afla in `src/resources/db.properties`:
+```
+db.url=jdbc:postgresql://localhost:5434/medical_cabinet
+db.user=glosper
+db.password=ciscosecpa55
+```
+
+Asigurati-va ca baza de date `medical_cabinet` exista si utilizatorul are drepturi de creare tabele.
+
+---
+
+## 6. Instructiuni de rulare
+
+### Prerequisite
+- Java 17+
+- PostgreSQL 14+ rulând pe portul 5434
+- Baza de date `medical_cabinet` creata
+
+### Compilare
+```bash
+javac -d out -cp "lib/*" -sourcepath src src/cabinet/Main.java
+```
+
+### Executie
+```bash
+java -cp "out:lib/*:src/resources" cabinet.Main
+```
+
+> Pe Windows inlocuiti `:` cu `;` in `-cp`.
+
+La prima rulare se creeaza automat tabelele (prin `schema.sql`).  
+La rulari ulterioare, inregistrarile existente sunt sarite (`ON CONFLICT DO NOTHING`).  
+Fisierul `audit.csv` este actualizat la fiecare rulare.

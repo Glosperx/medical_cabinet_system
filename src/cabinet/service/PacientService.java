@@ -2,39 +2,39 @@ package cabinet.service;
 
 import cabinet.model.FisaMedicala;
 import cabinet.model.Pacient;
+import cabinet.repository.FisaMedicalaRepository;
+import cabinet.repository.PacientRepository;
 
 import java.util.List;
 import java.util.TreeSet;
 
 public class PacientService {
 
-    private TreeSet<Pacient> pacienti = new TreeSet<>();
+    private final PacientRepository pacientRepo = PacientRepository.getInstance();
+    private final FisaMedicalaRepository fisaRepo = FisaMedicalaRepository.getInstance();
 
     public void adaugaPacient(Pacient pacient) {
-        pacienti.add(pacient);
+        pacientRepo.save(pacient);
+        AuditService.getInstance().log("inregistrare_pacient");
     }
 
     public Pacient gasesteDupaCnp(String cnp) {
-        return pacienti.stream()
-                .filter(p -> p.getCnp().equals(cnp))
-                .findFirst()
-                .orElse(null);
+        return pacientRepo.findById(cnp).orElse(null);
     }
 
     public void adaugaFisaMedicala(String cnp, FisaMedicala fisa) {
-        Pacient pacient = gasesteDupaCnp(cnp);
-        if (pacient != null) {
-            pacient.adaugaFisa(fisa);
-        }
+        fisa.setPacientCnp(cnp);
+        fisaRepo.save(fisa);
+        AuditService.getInstance().log("adaugare_fisa_medicala");
     }
 
     public List<FisaMedicala> getIstoricMedical(String cnp) {
-        Pacient pacient = gasesteDupaCnp(cnp);
-        if (pacient == null) return List.of();
-        return pacient.getIstoricMedical();
+        AuditService.getInstance().log("vizualizare_istoric_medical");
+        return fisaRepo.findByPacientCnp(cnp);
     }
 
     public TreeSet<Pacient> getTotiPacientii() {
-        return pacienti;
+        AuditService.getInstance().log("afisare_pacienti");
+        return new TreeSet<>(pacientRepo.findAll());
     }
 }
